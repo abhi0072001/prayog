@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <title>Awenesty - Viral Social Media Aggregator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --text-color-default: #1f2937;
+            --text-color-muted: #6b7280;
+            --text-color-accent: #4f46e5; /* indigo-600 */
+            --text-color-inverted: #ffffff;
+            --text-color-nav-inactive: #6B7280; /* gray-500 */
+
+            --card-bg-color: #ffffff;
+            --header-bg-color: #4f46e5; /* indigo-600 */
+            --header-icon-bg-color: #6366f1; /* indigo-500 */
+            --header-icon-bg-hover-color: #818cf8; /* indigo-400 */
+            
+            --scrollable-pane-bg: #ffffff;
+            --button-bg: #e5e7eb; /* gray-200 */
+            --button-text: #1f2937; /* gray-800 */
+            --button-active-bg: #4f46e5; /* indigo-600 */
+            --button-active-text: #ffffff;
+            
+            --border-color-light: #e5e7eb; /* gray-200/100 */
+            --border-color-medium: #d1d5db; /* gray-300 */
+            
+            --modal-bg-color: #ffffff;
+            --modal-text-strong-color: #374151; /* gray-700 */
+            --modal-text-normal-color: #6b7280; /* gray-600 */
+            --modal-overlay-color: rgba(0, 0, 0, 0.5);
+
+            --placeholder-bg: #e5e7eb; /* gray-200 */
+            --placeholder-shimmer: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+            --dropdown-bg-color: var(--card-bg-color);
+            --dropdown-border-color: var(--border-color-light);
+            --dropdown-text-color: var(--text-color-default);
+            --dropdown-hover-bg-color: var(--button-bg);
+        }
+
+        body.dark-mode {
+            --bg-color: #111827; /* gray-900 */
+            --text-color-default: #f3f4f6; /* gray-100 */
+            --text-color-muted: #9ca3af; /* gray-400 */
+            --text-color-accent: #818cf8; /* indigo-400 */
+            --text-color-inverted: #e0e7ff; /* indigo-100 for header text */
+            --text-color-nav-inactive: #9ca3af; /* gray-400 */
+
+
+            --card-bg-color: #1f2937; /* gray-800 */
+            --header-bg-color: #3730a3; /* indigo-800 or a darker shade */
+            --header-icon-bg-color: #4338ca; /* indigo-700 */
+            --header-icon-bg-hover-color: #4f46e5; /* indigo-600 */
+
+            --scrollable-pane-bg: #1f2937; /* gray-800 */
+            --button-bg: #374151; /* gray-700 */
+            --button-text: #d1d5db; /* gray-300 */
+            --button-active-bg: #4f46e5; /* indigo-600 (can keep this or adjust) */
+            --button-active-text: #ffffff; /* Text on active buttons */
+            
+            --border-color-light: #374151; /* gray-700 */
+            --border-color-medium: #4b5563; /* gray-600 */
+
+            --modal-bg-color: #1f2937; /* gray-800 */
+            --modal-text-strong-color: #f3f4f6; /* gray-100 */
+            --modal-text-normal-color: #9ca3af; /* gray-400 */
+            --modal-overlay-color: rgba(0, 0, 0, 0.7);
+
+            --placeholder-bg: #374151; /* gray-700 */
+            --placeholder-shimmer: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.15); /* Adjusted shadow for dark */
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.25);
+
+            --dropdown-bg-color: var(--card-bg-color);
+            --dropdown-border-color: var(--border-color-medium);
+            --dropdown-text-color: var(--text-color-default);
+            --dropdown-hover-bg-color: var(--button-bg);
+        }
+
+        /* Base body styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color-default);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* Scrollbar utility */
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Placeholder image styles */
+        .placeholder-img { background-color: var(--placeholder-bg); position: relative; overflow: hidden; }
+        .placeholder-img::before { content: ""; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: var(--placeholder-shimmer); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 100% { left: 100%; } }
+        
+        /* Video overlay styles */
+        .video-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: rgba(0, 0, 0, 0.5); border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+        .video-time { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.7); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px; }
+        .social-icon { display: inline-flex; align-items: center; margin-right: 4px; }
+        
+        /* Action button styles */
+        .action-btn { transition: all 0.2s ease; padding: 8px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-color-muted); }
+        .action-btn:hover { background-color: rgba(128, 128, 128, 0.1); } /* Neutral hover for light */
+        body.dark-mode .action-btn:hover { background-color: rgba(255, 255, 255, 0.08); } /* Lighter hover for dark */
+
+        .action-btn.liked { color: #EF4444; transform: scale(1.1); }
+        .action-btn.disliked { color: var(--text-color-muted); transform: scale(1.1); }
+        body.dark-mode .action-btn.disliked { color: #888; } /* Slightly distinct disliked color in dark */
+        .action-btn.saved { color: var(--text-color-accent); transform: scale(1.1); }
+        .action-btn.shared { color: #10B981; transform: scale(1.1); }
+
+        /* Login modal button styles */
+        .login-option-btn { display: flex; align-items: center; justify-content: center; padding: 10px 15px; border-radius: 8px; font-size: 1rem; font-weight: 500; transition: background-color 0.2s ease; border: 1px solid var(--border-color-light); }
+        .login-option-btn svg { margin-right: 10px; width: 20px; height: 20px; }
+        .login-option-btn:hover { background-color: rgba(128,128,128,0.05); }
+        body.dark-mode .login-option-btn { border-color: var(--border-color-medium); }
+        body.dark-mode .login-option-btn:hover { background-color: rgba(255,255,255,0.05); }
+
+        .login-google-btn { background-color: var(--card-bg-color); /* Uses card-bg for theme adaptability */ color: var(--text-color-default); }
+        body.dark-mode .login-google-btn { background-color: #424242; color: #E0E0E0; border-color: var(--border-color-medium); }
+        body.dark-mode .login-google-btn:hover { background-color: #555555;}
+        
+        .login-instagram-btn { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; border: none; }
+        .login-instagram-btn:hover { opacity: 0.9; }
+        .login-mobile-btn { background-color: #25D366; color: white; border: none; }
+        .login-mobile-btn:hover { background-color: #1EBE57; }
+
+        /* Scrollable pane & bottom nav hide/show transitions */
+        #scrollable-top-pane, #bottom-nav-bar { transition: transform 0.3s ease-out, opacity 0.3s ease-out; }
+        #scrollable-top-pane.is-hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+        #bottom-nav-bar.is-hidden { transform: translateY(100%); opacity: 0; pointer-events: none; }
+        
+        /* Navigation item active/inactive colors */
+        .nav-active { color: var(--text-color-accent); }
+        .nav-inactive { color: var(--text-color-nav-inactive); }
+
+        /* Theming for major layout components and Tailwind classes */
+        header { background-color: var(--header-bg-color); color: var(--text-color-inverted); box-shadow: var(--shadow-md); }
+        /* Specific for header icons to ensure they get themed background */
+        header .p-2.rounded-full { background-color: var(--header-icon-bg-color) !important; }
+        header .p-2.rounded-full:hover { background-color: var(--header-icon-bg-hover-color) !important; }
+        header .text-white svg { fill: var(--text-color-inverted); } /* Assumes header icons are meant to be inverted color */
+
+        #scrollable-top-pane { background-color: var(--scrollable-pane-bg); box-shadow: var(--shadow-md); border-bottom: 1px solid var(--border-color-light); }
+        /* Category, Social, and Tag buttons in scrollable pane */
+        #scrollable-top-pane button { /* Applied to all buttons in this pane for consistency */
+            transition: background-color 0.2s ease, color 0.2s ease; 
+            background-color: var(--button-bg);
+            color: var(--button-text);
+        }
+         /* For Tag buttons that might have border */
+        #scrollable-top-pane #tags-container button { /* This will be moved to search-modal */
+             border-color: var(--border-color-medium);
+        }
+
+        #scrollable-top-pane button.bg-indigo-600, /* For initially active "All" buttons or JS-set active */
+        #scrollable-top-pane button.text-white { /* For initially active "All" buttons or JS-set active */
+            background-color: var(--button-active-bg) !important;
+            color: var(--button-active-text) !important;
+        }
+         /* For tag button text color if specifically set to indigo */
+        #scrollable-top-pane #tags-container button.text-indigo-600 { /* This will be moved to search-modal */
+            color: var(--text-color-accent); 
+        }
+        body.dark-mode #scrollable-top-pane #tags-container button.text-indigo-600 { /* This will be moved to search-modal */
+            border-color: var(--border-color-medium); /* Ensure border color also themes */
+        }
+
+
+        /* Specific classes in scrollable pane for text that isn't on a button */
+        /* Note: The Trending Tags section and its label/button are moved to search-modal */
+        #scrollable-top-pane .sort-label, #scrollable-top-pane .sort-select { /* For the new sort dropdown */
+            color: var(--text-color-default);
+        }
+        #scrollable-top-pane .sort-select {
+            background-color: var(--button-bg);
+            border: 1px solid var(--border-color-medium);
+        }
+
+        
+        /* Main content cards */
+        main .bg-white { background-color: var(--card-bg-color); box-shadow: var(--shadow-md); }
+        main .font-medium { color: var(--text-color-default); } /* Usernames, titles within cards */
+        main .text-xs.text-gray-500 { color: var(--text-color-muted); } /* Platform name under username */
+        main p { color: var(--text-color-default); } /* Post text */
+        main .text-indigo-600 { color: var(--text-color-accent); } /* Hashtags */
+        main .border-t { border-top-color: var(--border-color-light) !important; } /* Card internal border */
+        /* Profile icon placeholder in cards */
+        main .bg-gray-200.rounded-full { background-color: var(--button-bg); color: var(--button-text); }
+         /* Article link background in cards */
+        main .bg-gray-100.rounded-md { background-color: var(--button-bg); }
+        body.dark-mode main .bg-gray-100.rounded-md { background-color: var(--bg-color); } /* Match body bg for dark article links */
+
+
+        /* Bottom navigation bar */
+        #bottom-nav-bar { background-color: var(--scrollable-pane-bg); border-top: 1px solid var(--border-color-light); }
+        #bottom-nav-bar svg { stroke: currentColor; } /* Ensures nav icons take color from parent button */
+
+        /* Modals */
+        .fixed.bg-black.bg-opacity-50 { background-color: var(--modal-overlay-color); }
+        /* For modal main content block */
+        div[id$="-modal"] > .bg-white.p-6.rounded-lg { background-color: var(--modal-bg-color) !important; box-shadow: var(--shadow-md); }
+        div[id$="-modal"] .text-gray-800 { color: var(--modal-text-strong-color) !important; } /* Modal titles */
+        div[id$="-modal"] .text-gray-600 { color: var(--modal-text-normal-color) !important; } /* Modal paragraph text */
+        div[id$="-modal"] .text-gray-500.hover\:text-gray-800:hover { color: var(--modal-text-strong-color) !important; } /* Modal close icon hover */
+        
+        /* Past trends modal buttons */
+        #past-trends-modal .bg-indigo-600.text-white { background-color: var(--button-active-bg) !important; color: var(--button-active-text) !important; }
+        #past-trends-modal .hover\:bg-indigo-700:hover { opacity: 0.9; } /* Simple hover for themed active buttons */
+        body.dark-mode #past-trends-modal .hover\:bg-indigo-700:hover { background-color: var(--header-icon-bg-hover-color) !important; }
+
+        /* Search Modal specific styles */
+        #search-modal input[type="text"] {
+            background-color: var(--card-bg-color); /* Use card background for input */
+            color: var(--text-color-default);
+            border-color: var(--border-color-medium);
+        }
+        body.dark-mode #search-modal input[type="text"]::placeholder {
+            color: var(--text-color-muted);
+        }
+        #search-modal .font-medium.text-gray-700 { color: var(--modal-text-strong-color); } /* "Trending Tags" label in search modal */
+        #search-modal .text-indigo-600 { color: var(--text-color-accent); } /* "Show/Hide" button for tags in search modal */
+        #search-modal #tags-container button { 
+            background-color: var(--button-bg); 
+            color: var(--text-color-accent); 
+            border: 1px solid var(--border-color-medium);
+        }
+        #search-modal #tags-container button:hover { opacity: 0.8; }
+        #search-modal .border-t { border-top-color: var(--border-color-light) !important; }
+
+
+        /* Ensure SVGs in action buttons have appropriate fill/stroke for theme */
+        .action-btn svg { stroke: currentColor; } /* Default is outline */
+        .action-btn.liked svg, 
+        .action-btn.disliked svg, /* For if disliked becomes filled */
+        .action-btn.shared svg { fill: currentColor; stroke: none; } /* When active and filled */
+        
+        .action-btn.save-btn svg[fill="none"] { stroke: currentColor; } /* Outline save icon */
+        .action-btn.save-btn.saved svg { fill: var(--text-color-accent); stroke: var(--text-color-accent); } /* Filled save icon when saved */
+        /* Ensure the 'saved' class on saved page has correct fill if it's already set to currentColor via JS */
+        #saved-page-content .action-btn.save-btn.saved svg[fill="currentColor"] { fill: var(--text-color-accent); stroke: var(--text-color-accent); }
+
+        /* Overflow Menu Styles */
+        .overflow-menu {
+            background-color: var(--dropdown-bg-color);
+            border: 1px solid var(--dropdown-border-color);
+            box-shadow: var(--shadow-lg);
+        }
+        .overflow-menu-item {
+            color: var(--dropdown-text-color);
+        }
+        .overflow-menu-item:hover {
+            background-color: var(--dropdown-hover-bg-color);
+        }
+
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col"> 
+    <header class="sticky top-0 z-30 bg-indigo-600 text-white p-4 shadow-md"> <div class="flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Awenesty</h1>
+            <div class="flex space-x-2 items-center relative"> <button id="theme-toggle-btn" title="Toggle theme" class="p-2 rounded-full bg-indigo-500 hover:bg-indigo-400">
+                    <svg id="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg id="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <button id="search-modal-btn" title="Search" class="p-2 rounded-full bg-indigo-500 hover:bg-indigo-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <div class="relative">
+                    <button id="overflow-menu-btn" title="More options" class="p-2 rounded-full bg-indigo-500 hover:bg-indigo-400"> 
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                        </svg>
+                    </button>
+                    <div id="overflow-dropdown-menu" class="overflow-menu absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 hidden z-50">
+                        <a href="#" class="overflow-menu-item block px-4 py-2 text-sm">About</a>
+                        <a href="#" class="overflow-menu-item block px-4 py-2 text-sm">Privacy Policy</a>
+                        <a href="#" class="overflow-menu-item block px-4 py-2 text-sm">Terms of Service</a>
+                        <a href="mailto:contact@awenesty.com" class="overflow-menu-item block px-4 py-2 text-sm">Contact us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div id="scrollable-top-pane" class="sticky top-16 z-20 bg-white shadow-md"> <div class="p-2 overflow-x-auto no-scrollbar">
+            <div id="category-filter-buttons" class="flex space-x-2 pb-1">
+                <button data-category="all" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-indigo-600 text-white">All</button>
+                <button data-category="entertainment" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">Entertainment</button>
+                <button data-category="news" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">News</button>
+                <button data-category="lifestyle" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">Lifestyle</button>
+                <button data-category="business" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">Business</button>
+                <button data-category="motivation" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">Motivation</button>
+                <button data-category="technology" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">Technology</button>
+		        <button data-category="miscellaneous" class="category-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800">Miscellaneous</button>
+            </div>
+        </div>
+
+        <div class="p-2 border-t border-gray-100">
+            <div id="social-media-filters" class="flex space-x-2 pb-1 overflow-x-auto no-scrollbar">
+                <button id="all-social-btn" class="px-4 py-2 rounded-full text-sm whitespace-nowrap bg-indigo-600 text-white">All</button>
+
+                <button class="social-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800 flex items-center">
+                    <span class="social-icon"> <i class="fa fa-instagram" style="font-size:16px;color:red"></i> </span>
+                    Instagram
+                </button>
+
+                <button class="social-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800 flex items-center">
+                    <span class="social-icon"> <i class="fa fa-youtube-play" style="font-size:19px;color:red"></i> </span>
+                    YouTube
+                </button>
+
+                <button class="social-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800 flex items-center">
+                    <span class="social-icon"> <i class="fa fa-facebook-f" style="font-size:15px;color:blue"></i> </span>
+                    Facebook
+                </button>
+
+                <button class="social-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800 flex items-center">
+                    <span class="social-icon">𝕏</span>
+                    X
+                </button>
+
+                <button class="social-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800 flex items-center">
+                    <span class="social-icon"> <i class="fa fa-linkedin-square" style="font-size:17px;color:blue"></i> </span>
+                    LinkedIn
+                </button>
+
+                <button class="social-filter-btn px-4 py-2 rounded-full text-sm whitespace-nowrap bg-gray-200 text-gray-800 flex items-center">
+                    <span class="social-icon"> @ </span>
+                    Threads
+                </button>
+
+            </div>
+        </div>
+
+        <div class="px-4 py-2 flex justify-end items-center border-t border-gray-100">
+          <label for="sort-posts" class="text-sm text-gray-700 sort-label mr-2">Sort by:</label>
+          <select id="sort-posts" class="sort-select text-sm rounded px-3 py-1 focus:outline-none">
+            <option value="latest" selected>Newest</option>
+            <option value="popularity">Popularity</option>
+            <option value="length">Images First</option>
+            <option value="platform">Videos First</option>
+            <option value="random">Oldest</option>
+          </select>
+        </div>
+        
+    </div>
+
+    <main class="flex-1 p-4 mt-2">
+        <div id="home-page-content" class="space-y-4">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">
+                            𝕏 </div>
+                        <div>
+                            <div class="font-medium">TechInsider</div> <div class="text-xs text-gray-500">Twitter</div> </div>
+                    </div>
+                    <p class="mb-3">Breaking: Apple announces new AI features coming to iPhone this fall! #Apple #AI</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Apple</span>
+                        <span class="text-indigo-600 text-sm">#AI</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="post1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="post1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="post1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn" data-postid="post1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">📸</div>
+                        <div>
+                            <div class="font-medium">travel_addict</div>
+                            <div class="text-xs text-gray-500">Instagram</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">Paradise found! 🏝️ #Maldives #Travel</p>
+                    <div class="mb-3 rounded-lg overflow-hidden"><div class="placeholder-img" style="height: 250px;"></div> </div>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Maldives</span>
+                        <span class="text-indigo-600 text-sm">#Travel</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="post2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="post2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="post2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn" data-postid="post2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">💼</div>
+                        <div>
+                            <div class="font-medium">Business Insights</div>
+                            <div class="text-xs text-gray-500">LinkedIn</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">The future of work is here: 5 remote work trends that are transforming the workplace in 2025. #RemoteWork #FutureOfWork</p>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#RemoteWork</span>
+                        <span class="text-indigo-600 text-sm">#FutureOfWork</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="post3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="post3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                           <button class="action-btn share-btn" data-postid="post3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn" data-postid="post3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">▶️</div>
+                        <div>
+                            <div class="font-medium">SportsHighlights</div>
+                            <div class="text-xs text-gray-500">YouTube</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">INSANE last-minute goal in the World Cup semifinals! You have to see this! #WorldCup #Soccer</p>
+                    <div class="mb-3 rounded-lg overflow-hidden relative">
+                        <div class="placeholder-img" style="height: 250px;"></div> <div class="video-overlay"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg></div>
+                        <div class="video-time">0:48</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#WorldCup</span>
+                        <span class="text-indigo-600 text-sm">#Soccer</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="post4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="post4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="post4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn" data-postid="post4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">▶️</div>
+                        <div>
+                            <div class="font-medium">ChefMaster</div>
+                            <div class="text-xs text-gray-500">YouTube</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">My full recipe for the perfect Neapolitan Pizza. The secret is in the dough! 🍕 #Pizza #Cooking #Recipe</p>
+                    <div class="mb-3 rounded-lg overflow-hidden relative">
+                        <div class="placeholder-img" style="height: 250px;"></div>
+                        <div class="video-overlay"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg></div>
+                        <div class="video-time">12:34</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Pizza</span>
+                        <span class="text-indigo-600 text-sm">#Cooking</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                         <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="post5"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="post5"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="post5"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn" data-postid="post5"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="saved-page-content" class="space-y-4 hidden">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">🏏</div>
+                        <div>
+                            <div class="font-medium">Sachin Tendulkar</div>
+                            <div class="text-xs text-gray-500">Instagram</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">This is the first saved post. It's about something really interesting! #Saved #DummyContent</p>
+                    <div class="mb-3 rounded-lg overflow-hidden"><div class="placeholder-img" style="height: 200px;"></div></div>
+                    <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Saved</span>
+                        <span class="text-indigo-600 text-sm">#DummyContent</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="savedPost1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="savedPost1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="savedPost1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn saved" data-postid="savedPost1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">🚀</div>
+                        <div>
+                            <div class="font-medium">Elon Musk</div>
+                            <div class="text-xs text-gray-500">X</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">This is another saved post, perhaps a brilliant idea or a useful tip. #Inspiration #SavedForLater</p>
+                     <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Inspiration</span>
+                        <span class="text-indigo-600 text-sm">#SavedForLater</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="savedPost2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="savedPost2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="savedPost2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn saved" data-postid="savedPost2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">🎬</div>
+                        <div>
+                            <div class="font-medium">T-Series</div>
+                            <div class="text-xs text-gray-500">YouTube</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">A funny or informative video clip that was saved. #Video #Entertainment</p>
+                    <div class="mb-3 rounded-lg overflow-hidden relative">
+                        <div class="placeholder-img" style="height: 220px;"></div>
+                        <div class="video-overlay"><svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" /></svg></div>
+                        <div class="video-time">1:15</div>
+                    </div>
+                     <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Video</span>
+                        <span class="text-indigo-600 text-sm">#Entertainment</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="savedPost3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="savedPost3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="savedPost3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn saved" data-postid="savedPost3"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="p-4">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <div class="bg-gray-200 rounded-full h-10 w-10 flex items-center justify-center text-lg">@</div>
+                        <div>
+                            <div class="font-medium">Mark Zuckerberg</div>
+                            <div class="text-xs text-gray-500">Threads</div>
+                        </div>
+                    </div>
+                    <p class="mb-3">I liked reading this article. Check it out! #Article #ReadLater</p>
+                    <div class="mb-3 p-3 bg-gray-100 rounded-md">
+                        <a href="#" class="text-indigo-600 hover:underline">Link to the saved article...</a>
+                    </div>
+                     <div class="flex flex-wrap gap-1 mb-3">
+                        <span class="text-indigo-600 text-sm">#Article</span>
+                        <span class="text-indigo-600 text-sm">#ReadLater</span>
+                    </div>
+                    <div class="flex justify-between items-center border-t pt-2">
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn like-btn" data-postid="savedPost4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" /></svg></button>
+                            <button class="action-btn dislike-btn" data-postid="savedPost4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06L17 4m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" /></svg></button>
+                        </div>
+                        <div class="flex items-center space-x-1">
+                            <button class="action-btn share-btn" data-postid="savedPost4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" /></svg></button>
+                            <button class="action-btn save-btn saved" data-postid="savedPost4"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav id="bottom-nav-bar" class="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-3 flex justify-around z-10">
+        <button id="home-nav-btn" class="flex flex-col items-center nav-active"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span class="text-xs">Home</span>
+        </button>
+        <button id="past-trends-nav-btn" class="flex flex-col items-center nav-inactive">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <span class="text-xs">Past Trends</span>
+        </button>
+        <button id="saved-nav-btn" class="flex flex-col items-center nav-inactive"> <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+            </svg>
+            <span class="text-xs">Saved</span>
+        </button>
+        <button id="profile-nav-btn" class="flex flex-col items-center nav-inactive">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span class="text-xs">Profile</span>
+        </button>
+    </nav>
+
+    <div id="search-modal" class="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-start pt-10 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-1/2 lg:w-1/3 mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Search Content</h2>
+                <button id="close-search-modal-btn" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="mb-4">
+                <input type="text" id="search-input-field" placeholder="Search posts, #tags..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+    
+            <div class="border-t border-gray-100 pt-4">
+                 <div class="px-0 py-2 flex justify-between items-center"> <span class="font-medium text-gray-700">Trending Tags</span>
+                    <button id="toggle-tags" class="text-indigo-600">Show</button>
+                </div>
+                <div id="tags-container" class="p-2 border-t border-gray-100 hidden"> <div class="flex flex-wrap gap-2 pb-1">
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#Trump</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#Russia</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#IPL</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#Cricket</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#AI</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#Ukraine</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#Movies</button>
+                        <button class="px-3 py-1 bg-gray-100 text-indigo-600 rounded-full text-sm whitespace-nowrap border border-gray-300">#Viral</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="past-trends-modal" class="fixed inset-0 bg-black bg-opacity-50 z-30 flex justify-center items-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-1/3 mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Past Trends</h2>
+                <button id="close-past-trends-modal-btn" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Select a time frame to view past trends:</p>
+            <div class="flex flex-col space-y-3">
+                <button class="w-full px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">1 Day</button>
+                <button class="w-full px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">7 Days</button>
+                <button class="w-full px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">30 Days</button>
+                <button class="w-full px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">Year 2025</button>
+                <button class="w-full px-4 py-2 rounded-md bg-indigo-600 text-white hover:bg-indigo-700 transition">Year 2024</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile-login-modal" class="fixed inset-0 bg-black bg-opacity-50 z-30 flex justify-center items-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-xl w-11/12 md:w-1/3 mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold text-gray-800">Login or Sign Up</h2>
+                <button id="close-profile-modal-btn" class="text-gray-500 hover:text-gray-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <p class="text-gray-600 mb-6">Choose an option to continue:</p>
+            <div class="flex flex-col space-y-3">
+                <button class="login-option-btn login-mobile-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C6.55 22.5 1.5 17.45 1.5 10.5V8.25V4.5Z" clip-rule="evenodd" /></svg>
+                    Login with Mobile Number
+                </button>
+                <button class="login-option-btn login-google-btn">
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px"><path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l0.003-0.002l6.19,5.238C39.702,35.696,44,30.409,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>
+                    Login with Google
+                </button>
+                <button class="login-option-btn login-instagram-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Login with Instagram
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // --- Theme Toggle Logic ---
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const sunIcon = document.getElementById('theme-icon-sun');
+            const moonIcon = document.getElementById('theme-icon-moon');
+            
+            function setTheme(isDark) {
+                if (isDark) {
+                    document.body.classList.add('dark-mode');
+                    if(sunIcon) sunIcon.classList.add('hidden');
+                    if(moonIcon) moonIcon.classList.remove('hidden');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    if(sunIcon) sunIcon.classList.remove('hidden');
+                    if(moonIcon) moonIcon.classList.add('hidden');
+                    localStorage.setItem('theme', 'light');
+                }
+            }
+
+            const currentThemeStored = localStorage.getItem('theme');
+            const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (currentThemeStored === 'dark') {
+                setTheme(true);
+            } else if (currentThemeStored === 'light') {
+                setTheme(false);
+            } else { // No theme saved, use system preference
+                setTheme(userPrefersDark);
+            }
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', function() {
+                    const isDarkMode = document.body.classList.contains('dark-mode');
+                    setTheme(!isDarkMode);
+                });
+            }
+
+            // --- MODAL & MENU & FILTER JS ---
+            const toggleButton = document.getElementById('toggle-tags'); 
+            const tagsContainer = document.getElementById('tags-container'); 
+            if (toggleButton && tagsContainer) {
+                toggleButton.addEventListener('click', function() {
+                    tagsContainer.classList.toggle('hidden');
+                    toggleButton.textContent = tagsContainer.classList.contains('hidden') ? 'Show' : 'Hide';
+                });
+            }
+
+            // --- Category Filter Logic (Multiple Selection) ---
+            const categoryFilterButtonContainer = document.getElementById('category-filter-buttons');
+            if (categoryFilterButtonContainer) {
+                const allCategoryBtn = categoryFilterButtonContainer.querySelector('button[data-category="all"]');
+                const individualCategoryBtns = categoryFilterButtonContainer.querySelectorAll('button:not([data-category="all"])');
+
+                function setCategoryButtonActive(button) {
+                    button.classList.add('bg-indigo-600', 'text-white');
+                    button.classList.remove('bg-gray-200', 'text-gray-800');
+                }
+                function setCategoryButtonInactive(button) {
+                    button.classList.remove('bg-indigo-600', 'text-white');
+                    button.classList.add('bg-gray-200', 'text-gray-800');
+                }
+
+                if (allCategoryBtn) {
+                    allCategoryBtn.addEventListener('click', function() {
+                        setCategoryButtonActive(this);
+                        individualCategoryBtns.forEach(btn => setCategoryButtonInactive(btn));
+                    });
+                }
+
+                individualCategoryBtns.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const isCurrentlyActive = this.classList.contains('bg-indigo-600');
+                        if (isCurrentlyActive) {
+                            setCategoryButtonInactive(this);
+                        } else {
+                            setCategoryButtonActive(this);
+                        }
+
+                        let anyIndividualActive = false;
+                        individualCategoryBtns.forEach(btn => {
+                            if (btn.classList.contains('bg-indigo-600')) {
+                                anyIndividualActive = true;
+                            }
+                        });
+
+                        if (allCategoryBtn) {
+                            if (anyIndividualActive) {
+                                setCategoryButtonInactive(allCategoryBtn);
+                            } else {
+                                setCategoryButtonActive(allCategoryBtn);
+                            }
+                        }
+                    });
+                });
+            }
+
+
+            const allSocialBtn = document.getElementById('all-social-btn');
+            const socialFilterButtons = document.querySelectorAll('.social-filter-btn'); 
+            
+            function setSocialButtonActive(button) { 
+                button.classList.add('bg-indigo-600', 'text-white');
+                button.classList.remove('bg-gray-200', 'text-gray-800');
+            }
+            function setSocialButtonInactive(button) { 
+                button.classList.remove('bg-indigo-600', 'text-white');
+                button.classList.add('bg-gray-200', 'text-gray-800');
+            }
+
+            if (allSocialBtn) {
+                allSocialBtn.addEventListener('click', function() {
+                    setSocialButtonActive(this);
+                    socialFilterButtons.forEach(btn => setSocialButtonInactive(btn));
+                });
+            }
+            socialFilterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const isCurrentlyActive = this.classList.contains('bg-indigo-600');
+                    if (isCurrentlyActive) {
+                         setSocialButtonInactive(this);
+                    } else {
+                         setSocialButtonActive(this);
+                    }
+
+                    let anyIndividualActive = false;
+                    socialFilterButtons.forEach(btn => {
+                        if (btn.classList.contains('bg-indigo-600')) {
+                            anyIndividualActive = true;
+                        }
+                    });
+
+                    if (allSocialBtn) {
+                        if (anyIndividualActive) {
+                            setSocialButtonInactive(allSocialBtn); 
+                        } else {
+                             let stillAnyActive = false;
+                             socialFilterButtons.forEach(btn => {
+                                if (btn.classList.contains('bg-indigo-600')) stillAnyActive = true;
+                             });
+                             if (!stillAnyActive) setSocialButtonActive(allSocialBtn);
+                        }
+                    }
+                });
+            });
+
+            const likeButtons = document.querySelectorAll('.like-btn');
+            const dislikeButtons = document.querySelectorAll('.dislike-btn');
+            const shareButtons = document.querySelectorAll('.share-btn');
+            
+            let postInteractions = {}; 
+
+            function updateActionVisualState(button, interactionType, postId, isActive) {
+                const svg = button.querySelector('svg');
+                const activeClass = interactionType; 
+
+                if (isActive) {
+                    button.classList.add(activeClass);
+                    if (svg) {
+                        if (interactionType === 'saved') {
+                            svg.setAttribute('fill', 'var(--text-color-accent)');
+                            svg.setAttribute('stroke', 'var(--text-color-accent)'); 
+                        } else {
+                             svg.setAttribute('fill', 'currentColor'); 
+                        }
+                    }
+                } else {
+                    button.classList.remove(activeClass);
+                    if (svg) {
+                        svg.setAttribute('fill', 'none');
+                        svg.setAttribute('stroke', 'currentColor'); 
+                    }
+                }
+            }
+
+
+            function handlePostAction(postId, actionType) {
+                if (!postInteractions[postId]) {
+                    postInteractions[postId] = { liked: false, disliked: false, saved: false };
+                }
+                const currentState = postInteractions[postId];
+                const likeButton = document.querySelector(`.like-btn[data-postid="${postId}"]`);
+                const dislikeButton = document.querySelector(`.dislike-btn[data-postid="${postId}"]`);
+                const saveButton = document.querySelector(`.save-btn[data-postid="${postId}"]`);
+
+                if (actionType === 'like') {
+                    currentState.liked = !currentState.liked;
+                    if (currentState.liked) currentState.disliked = false; 
+                } else if (actionType === 'dislike') {
+                    currentState.disliked = !currentState.disliked;
+                    if (currentState.disliked) currentState.liked = false; 
+                } else if (actionType === 'save') {
+                    currentState.saved = !currentState.saved;
+                }
+                
+                if(likeButton) updateActionVisualState(likeButton, 'liked', postId, currentState.liked);
+                if(dislikeButton) updateActionVisualState(dislikeButton, 'disliked', postId, currentState.disliked);
+                if(saveButton) {
+                    if (saveButton.closest('#saved-page-content')) {
+                        if(actionType === 'save' && !currentState.saved) { 
+                             updateActionVisualState(saveButton, 'saved', postId, false);
+                        } else {
+                             updateActionVisualState(saveButton, 'saved', postId, true); 
+                             postInteractions[postId].saved = true; 
+                        }
+                    } else {
+                         updateActionVisualState(saveButton, 'saved', postId, currentState.saved);
+                    }
+                }
+            }
+            
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    handlePostAction(this.getAttribute('data-postid'), 'like');
+                });
+            });
+
+            dislikeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    handlePostAction(this.getAttribute('data-postid'), 'dislike');
+                });
+            });
+            
+            document.querySelectorAll('.save-btn').forEach(button => {
+                const postId = button.getAttribute('data-postid');
+                if (!postInteractions[postId]) postInteractions[postId] = { liked: false, disliked: false, saved: false };
+
+                if (button.closest('#saved-page-content')) { 
+                    postInteractions[postId].saved = true; 
+                    updateActionVisualState(button, 'saved', postId, true);
+                } else { 
+                    updateActionVisualState(button, 'saved', postId, postInteractions[postId].saved);
+                }
+
+                button.addEventListener('click', function() {
+                    handlePostAction(this.getAttribute('data-postid'), 'save');
+                });
+            });
+
+
+            shareButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.classList.add('shared'); 
+                    setTimeout(() => this.classList.remove('shared'), 500);
+                });
+            });
+
+
+            function setupModal(triggerBtnId, modalId, closeBtnId) {
+                const triggerBtn = document.getElementById(triggerBtnId);
+                const modal = document.getElementById(modalId);
+                const closeBtn = document.getElementById(closeBtnId);
+                if (triggerBtn && modal && closeBtn) {
+                    triggerBtn.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        modal.classList.remove('hidden');
+                    });
+                    closeBtn.addEventListener('click', function() {
+                        modal.classList.add('hidden');
+                    });
+                    modal.addEventListener('click', function(event) {
+                        if (event.target === modal) { 
+                            if (event.target.id === modalId) {
+                                modal.classList.add('hidden');
+                            }
+                        }
+                    });
+                }
+            }
+            setupModal('search-modal-btn', 'search-modal', 'close-search-modal-btn'); 
+            setupModal('past-trends-nav-btn', 'past-trends-modal', 'close-past-trends-modal-btn');
+            setupModal('profile-nav-btn', 'profile-login-modal', 'close-profile-modal-btn');
+
+             // Overflow Menu Logic
+            const overflowMenuBtn = document.getElementById('overflow-menu-btn');
+            const overflowDropdownMenu = document.getElementById('overflow-dropdown-menu');
+
+            if (overflowMenuBtn && overflowDropdownMenu) {
+                overflowMenuBtn.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent click from bubbling up to document
+                    overflowDropdownMenu.classList.toggle('hidden');
+                });
+
+                // Close dropdown if clicked outside
+                document.addEventListener('click', function(event) {
+                    if (!overflowMenuBtn.contains(event.target) && !overflowDropdownMenu.contains(event.target)) {
+                        overflowDropdownMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+
+            let lastScrollTop = 0;
+            const scrollableTopPane = document.getElementById('scrollable-top-pane');
+            const bottomNavBar = document.getElementById('bottom-nav-bar');
+            const scrollDeltaThreshold = 5;
+            const homePageContent = document.getElementById('home-page-content'); 
+            const savedPageContent = document.getElementById('saved-page-content');
+
+            window.addEventListener('scroll', function() {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (!scrollableTopPane || !bottomNavBar) {
+                    return;
+                }
+                const isOnSavedPage = savedPageContent && !savedPageContent.classList.contains('hidden');
+                
+                if (isOnSavedPage && scrollTop === 0) { 
+                     if (scrollableTopPane.classList.contains('is-hidden')) {
+                        scrollableTopPane.classList.remove('is-hidden');
+                    }
+                    if (bottomNavBar.classList.contains('is-hidden')) {
+                        bottomNavBar.classList.remove('is-hidden');
+                    }
+                    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; 
+                    return; 
+                }
+
+                if (Math.abs(scrollTop - lastScrollTop) <= scrollDeltaThreshold && scrollTop !== 0) {
+                    return;
+                }
+
+                if (scrollTop > lastScrollTop && scrollTop > 50) { 
+                    if (!scrollableTopPane.classList.contains('is-hidden')) {
+                        scrollableTopPane.classList.add('is-hidden');
+                    }
+                    if (!bottomNavBar.classList.contains('is-hidden')) {
+                        bottomNavBar.classList.add('is-hidden');
+                    }
+                } else if (scrollTop < lastScrollTop ) { 
+                     if (scrollableTopPane.classList.contains('is-hidden')) {
+                        scrollableTopPane.classList.remove('is-hidden');
+                    }
+                    if (bottomNavBar.classList.contains('is-hidden')) {
+                        bottomNavBar.classList.remove('is-hidden');
+                    }
+                }
+                
+                if (scrollTop === 0) { 
+                    if (scrollableTopPane.classList.contains('is-hidden')) {
+                        scrollableTopPane.classList.remove('is-hidden');
+                    }
+                    if (bottomNavBar.classList.contains('is-hidden')) {
+                        bottomNavBar.classList.remove('is-hidden');
+                    }
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            }, false);
+
+            const homeNavBtn = document.getElementById('home-nav-btn');
+            const savedNavBtn = document.getElementById('saved-nav-btn'); 
+            const profileNavBtn = document.getElementById('profile-nav-btn');
+            const pastTrendsNavBtn = document.getElementById('past-trends-nav-btn');
+            const allNavButtons = [homeNavBtn, savedNavBtn, profileNavBtn, pastTrendsNavBtn];
+
+            function setActiveNav(activeBtn) {
+                allNavButtons.forEach(btn => {
+                    if (btn) { 
+                        btn.classList.remove('nav-active');
+                        btn.classList.add('nav-inactive');
+                    }
+                });
+                if (activeBtn) { 
+                    activeBtn.classList.add('nav-active');
+                    activeBtn.classList.remove('nav-inactive');
+                }
+            }
+
+            if (homeNavBtn && homePageContent && savedPageContent) {
+                homeNavBtn.addEventListener('click', () => {
+                    homePageContent.classList.remove('hidden');
+                    savedPageContent.classList.add('hidden');
+                    setActiveNav(homeNavBtn);
+                    if(scrollableTopPane) scrollableTopPane.classList.remove('is-hidden'); 
+                    window.scrollTo(0,0);
+                });
+            }
+
+            if (savedNavBtn && homePageContent && savedPageContent) {
+                savedNavBtn.addEventListener('click', () => {
+                    homePageContent.classList.add('hidden');
+                    savedPageContent.classList.remove('hidden');
+                    setActiveNav(savedNavBtn);
+                    if(scrollableTopPane) scrollableTopPane.classList.remove('is-hidden'); 
+                    window.scrollTo(0,0);
+                });
+            }
+            
+            if (profileNavBtn) {
+                profileNavBtn.addEventListener('click', () => {
+                     if (homePageContent && !homePageContent.classList.contains('hidden')) {
+                        setActiveNav(homeNavBtn);
+                    } else if (savedPageContent && !savedPageContent.classList.contains('hidden')) {
+                        setActiveNav(savedNavBtn);
+                    }
+                     if(scrollableTopPane) scrollableTopPane.classList.remove('is-hidden'); 
+                });
+            }
+
+            if (pastTrendsNavBtn) {
+                pastTrendsNavBtn.addEventListener('click', () => {
+                     if (homePageContent && !homePageContent.classList.contains('hidden')) {
+                        setActiveNav(homeNavBtn);
+                    } else if (savedPageContent && !savedPageContent.classList.contains('hidden')) {
+                        setActiveNav(savedNavBtn);
+                    }
+                     if(scrollableTopPane) scrollableTopPane.classList.remove('is-hidden'); 
+                });
+            }
+        });
+    </script>
+</body>
+</html>
